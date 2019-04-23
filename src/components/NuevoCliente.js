@@ -13,8 +13,16 @@ class NuevoCliente extends Component {
             email: '',
             tipo: ''
         },
-        error: false
+        error: false,
+        emails: []
     }
+
+    nuevoCampo = () => {
+        this.setState({
+            emails: this.state.emails.concat([{email: ''}])
+        })
+    }
+
     render() {
         const {error} = this.state;
         let respuesta = {error} ? <p className="alert alert-danger p-3 text-center">Todos los campos son obligatorios</p>: '';
@@ -100,53 +108,69 @@ class NuevoCliente extends Component {
                             </div>
                             </div>
                             <div className="form-row">
-                            <div className="form-group col-md-6">
-                                <label>Empresa</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    placeholder="Empresa"
-                                    onChange={e => {
-                                        this.setState({
-                                            cliente: {
-                                                ...this.state.cliente,
-                                                empresa: e.target.value
-                                            }
-                                        });
-                                    }}/>
-                            </div>
-                            <div className="form-group col-md-6">
-                                    <label>Email</label>
+                                <div className="form-group col-md-12">
+                                    <label>Empresa</label>
                                     <input 
-                                        type="email" 
+                                        type="text" 
                                         className="form-control" 
-                                        placeholder="Email" 
+                                        placeholder="Empresa"
                                         onChange={e => {
                                             this.setState({
                                                 cliente: {
                                                     ...this.state.cliente,
-                                                    email: e.target.value
+                                                    empresa: e.target.value
                                                 }
                                             });
                                         }}/>
                                 </div>
                             </div>
-                            <div className="form-row">
-                            <div className="form-group col-md-6">
-                                    <label>Edad</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        placeholder="Edad"
-                                        onChange={e => {
-                                            this.setState({
-                                                cliente: {
-                                                    ...this.state.cliente,
-                                                    edad: e.target.value
-                                                }
-                                            });
-                                        }}/>
+                            {this.state.emails.map((input, index) => (
+                                <div key={index} className="form-group col-md-12">
+                                    <label>Correo: {index + 1}:</label>
+                                    
+                                    <div className="input-group">
+                                        <input
+                                            type="email"
+                                            placeholder="Email"
+                                            className="form-control"
+                                        />
+                                        <div className="inpur-group-append">
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger"    
+                                            >&times; Eliminar </button>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+                            ))}
+                            <div className="form-group d-flex justify-content-center col-md-12">
+                                        <button
+                                            onClick={this.nuevoCampo}
+                                            type= "button"
+                                            className="btn btn-warning"
+                                        > +Agregar
+
+                                        </button>
                             </div>
+
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                        <label>Edad</label>
+                                        <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Edad"
+                                            onChange={e => {
+                                                this.setState({
+                                                    cliente: {
+                                                        ...this.state.cliente,
+                                                        edad: e.target.value
+                                                    }
+                                                });
+                                            }}/>
+                                </div>
                             <div className="form-group col-md-6">
                                 <label>Tipo Cliente</label>  
                                 <select 
