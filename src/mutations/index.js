@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const NUEVO_CLIENTE  = gql`
+export const NUEVO_CLIENTE = gql `
 
 mutation crearCliente($input: ClienteInput) {
     crearCliente(input: $input) {
@@ -11,7 +11,7 @@ mutation crearCliente($input: ClienteInput) {
 }
 `;
 
-export const ACTUALIZAR_CLIENTE = gql`
+export const ACTUALIZAR_CLIENTE = gql `
   mutation actualizarCliente($input : ClienteInput) {
     actualizarCliente(input: $input) {
       id
@@ -24,5 +24,11 @@ export const ACTUALIZAR_CLIENTE = gql`
         email
       }
     }
+  }
+`;
+
+export const ELIMINAR_CLIENTE = gql `
+  mutation eliminarCliente($id:ID!){
+  eliminarCliente(id: $id)
   }
 `;
