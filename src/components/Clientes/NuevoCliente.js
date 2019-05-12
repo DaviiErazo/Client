@@ -54,7 +54,7 @@ class NuevoCliente extends Component {
                 <div className="row justify-content-center">
                     <Mutation 
                         mutation={NUEVO_CLIENTE}
-                        onCompleted={ () => this.props.history.push('/')}
+                        onCompleted={ () => this.props.history.push('/clientes')}
                     >
 
                     { crearCliente => (
@@ -173,7 +173,7 @@ class NuevoCliente extends Component {
                                             onClick={this.nuevoCampo}
                                             type= "button"
                                             className="btn btn-warning"
-                                        > +Agregar
+                                        > +Agregar Email
 
                                         </button>
                             </div>

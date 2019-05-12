@@ -1,6 +1,7 @@
 import React, {Fragment, Component} from 'react';
 import { Query, Mutation } from 'react-apollo'
 import {Link} from 'react-router-dom';
+import Exito from '../Alertas/Exito';
 
 import Paginador from '../Paginador'
 
@@ -15,7 +16,11 @@ class Clientes extends Component {
         paginador : {
             offset: 0,
             actual: 1
-        }
+        },
+        alerta: {
+            mostrar: false,
+            mensaje: ''
+        },
     }
 
     paginaAnterior = () => {
@@ -37,6 +42,10 @@ class Clientes extends Component {
     }
 
     render(){
+
+        const {alerta: {mostrar, mensaje}} = this.state;
+        const alerta = (mostrar) ? <Exito mensaje={mensaje} /> : '';
+
         return(
             <Query query={CLIENTES_QUERY} pollInterval={500} variables={{limite: this.limite, offset: this.state.paginador.offset}}>
                 {({ loading, error, data, startPolling, stopPolling }) => {
@@ -47,6 +56,7 @@ class Clientes extends Component {
                     return (
                         <Fragment>
                             <h2 className="text-center">Listado Clientes</h2>
+                            {alerta}
                             <ul className="list-group mt-4">
                                 {data.getClientes.map(item => {
                                     
@@ -59,7 +69,31 @@ class Clientes extends Component {
                                                 {item.nombre} {item.apellido}
                                             </div>
                                             <div className="col-md-4 d-flex justify-content-end">
-                                                <Mutation mutation={ELIMINAR_CLIENTE}>
+                                                <Link to={`/pedidos/nuevo/${item.id}`}
+                                                      className="btn btn-warning d-block d-md-inline-block mr-2">
+                                                    &#43; Nuevo Pedido
+                                                </Link>
+                                                <Mutation 
+                                                    mutation={ELIMINAR_CLIENTE}
+                                                    onCompleted={(data) => {
+                                                        //console.log(data)
+                                                        this.setState({
+                                                            alerta: {
+                                                                mostrar: true,
+                                                                mensaje: data.eliminarCliente
+                                                            }
+                                                        }, () => {
+                                                            setTimeout(() => {
+                                                                this.setState({
+                                                                    alerta: {
+                                                                        mostrar: false,
+                                                                        mensaje: ''
+                                                                    },
+                                                                })
+                                                            }, 3000);
+                                                        })
+                                                    }}
+                                                >
                                                     {eliminarCliente => (
                                                         <button
                                                             type="button"
@@ -76,7 +110,7 @@ class Clientes extends Component {
                                                         </button>
                                                     )}
                                                 </Mutation>
-                                                <Link to={`/cliente/editar/${item.id}`} className="btn btn-success d-block d-md-inline-block">
+                                                <Link to={`/clientes/editar/${item.id}`} className="btn btn-success d-block d-md-inline-block">
                                                     Editar Cliente
                                                 </Link>
                                             </div>
@@ -87,7 +121,7 @@ class Clientes extends Component {
                             </ul>
                             <Paginador 
                                 actual = {this.state.paginador.actual}
-                                totalClientes = {data.totalClientes}
+                                total = {data.totalClientes}
                                 limite = {this.limite}
                                 paginaAnterior = {this.paginaAnterior}
                                 paginaSiguiente = {this.paginaSiguiente}
